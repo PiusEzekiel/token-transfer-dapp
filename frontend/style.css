@@ -1,0 +1,91 @@
+/* Reset and fonts */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    height: 100%;
+    background: #0f2027;  /* fallback for old browsers */
+    background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+    overflow: hidden;
+    animation: gradientShift 15s ease infinite;
+  }
+  
+  /* Background animation */
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Main card */
+  .container {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    max-width: 420px;
+    padding: 30px;
+    margin: 60px auto;
+    text-align: center;
+    animation: fadeIn 1.5s ease;
+  }
+  
+  /* Fade-in effect */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Buttons */
+  .button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #4fc3f7;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 15px;
+  }
+  .button:hover {
+    background: #81d4fa;
+  }
+  
+  /* Input fields */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  input {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+  input::placeholder {
+    color: #ccc;
+  }
+  
+  /* Status text */
+  #status {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #4fc3f7;
+  }
+  
+  /* Responsive */
+  @media (max-width: 480px) {
+    .container {
+      margin: 30px 20px;
+      padding: 20px;
+    }
+  }
+  

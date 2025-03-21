@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Token Transfer DApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Token Transfer DApp</h1>
+    <button id="connectBtn" class="button">Connect Wallet</button>
+    <p><strong>Account:</strong> <span id="account">Not Connected</span></p>
+    <p><strong>Balance:</strong> <span id="balance">0.00</span> MTK</p>
+
+    <h2>Transfer Tokens</h2>
+    <div class="input-group">
+      <input type="text" id="toAddress" placeholder="Recipient address" />
+      <input type="number" id="amount" placeholder="Amount" />
+    </div>
+    <button id="transferBtn" class="button">Transfer</button>
+
+    <p id="status"></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

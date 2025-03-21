@@ -43,35 +43,35 @@ This DApp allows users to **connect their Ethereum wallet**, view token balances
 > Include the following images in `/screenshots/` folder and reference them below
 
 - Frontend UI with wallet connected and initiating a transaction  
-<span style="margin-top: 50px;">&nbsp;</span>
+<span style="margin-bottom: 50px;">&nbsp;</span>
 <div style="display: inlign-flex; align-items: center">
-    <img src="/demo/Screenshot 2025-03-21 135551.png" width="750" height="300" alt="Image Description">
+    <img src="/demo/Screenshot 2025-03-21 135551.png" width="750" height="500" alt="Image Description">
 </div>
-<span style="margin-top: 50px;">&nbsp;</span>
+<span style="margin-bottom: 50px;">&nbsp;</span>
 <div style="display: inlign-flex; align-items: center">
-    <img src="/demo/Screenshot 2025-03-21 135551.png" width="750" height="300" alt="Image Description">
+    <img src="/demo/Screenshot 2025-03-21 135551.png" width="750" height="500" alt="Image Description">
 </div>
 
 - Successful token transfer with confirmation  
-<span style="margin-top: 50px;">&nbsp;</span>
+<span style="margin-bottom: 50px;">&nbsp;</span>
 <div style="display: inlign-flex; align-items: center">
-    <img src="/demo/Screenshot 2025-03-21 135858.png" width="750" height="300" alt="Image Description">
+    <img src="/demo/Screenshot 2025-03-21 135858.png" width="750" height="500" alt="Image Description">
 </div>
 
 - Terminal showing contract deployment output  
-<span style="margin-top: 50px;">&nbsp;</span>
+<span style="margin-bottom: 50px;">&nbsp;</span>
 <div style="display: inlign-flex; align-items: center">
     <img src="/demo/Screenshot 2025-03-21 115110_deploy.png" width="750" height="300" alt="Image Description">
 </div>
-<span style="margin-top: 50px;">&nbsp;</span>
+<span style="margin-bottom: 50px;">&nbsp;</span>
 <div style="display: inlign-flex; align-items: center">
-    <img src="/demo/Screenshot 2025-03-21 115438_deployed.png.png" width="750" height="300" alt="Image Description">
+    <img src="/demo/Screenshot 2025-03-21 115438_deployed.png" width="750" height="200" alt="Image Description">
 </div>
 
 - Successful test 
-<span style="margin-top: 50px;">&nbsp;</span>
+<span style="margin-bottom: 50px;">&nbsp;</span>
 <div style="display: inlign-flex; align-items: center">
-    <img src="/demo/Screenshot 2025-03-21 115403_test.png" width="750" height="300" alt="Image Description">
+    <img src="/demo/Screenshot 2025-03-21 115403_test.png" width="750" height="250" alt="Image Description">
 </div>
 
 ---

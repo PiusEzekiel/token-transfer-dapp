@@ -27,6 +27,7 @@
   /* Container Styles */
   .dashboard {
     max-width: 500px;
+    width: 100%;
     margin: auto;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(16px);

@@ -81,70 +81,97 @@ document.getElementById("connectBtn").onclick = async () => {
   
 // Transfer Tokens
 document.getElementById("transferBtn").onclick = async (e) => {
-  e.preventDefault(); // Prevent form from reloading page
-
-  const to = document.getElementById("toAddress").value.trim();
-  const amount = document.getElementById("amount").value.trim();
-
-  // Validate inputs
-  if (!ethers.utils.isAddress(to)) {
-    Toastify({
-      text: "❌ Invalid address",
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "#f44336"
-    }).showToast();
-    return;
-  }
-
-  if (!amount || isNaN(amount) || Number(amount) <= 0) {
-    Toastify({
-      text: "❌ Invalid amount",
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "#f44336"
-    }).showToast();
-    return;
-  }
-
-  try {
-    document.getElementById("status").innerHTML = "<div class='spinner'></div>";
-
-    const tx = await contract.transfer(to, ethers.utils.parseUnits(amount, 18));
-    document.getElementById("status").innerText = "⏳ Sending transaction...";
-    await tx.wait();
-
-    document.getElementById("status").innerText = "✅ Transaction confirmed!";
-    Toastify({
-      text: "✅ Tokens sent successfully!",
-      duration: 4000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "#4caf50"
-    }).showToast();
-
-    // Refresh balance
-    const account = await signer.getAddress();
-    const balance = await contract.balanceOf(account);
-    document.getElementById("balance").innerText = ethers.utils.formatUnits(balance, 18);
-
-    // Save transaction
-    saveTx(to, amount);
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("status").innerText = "❌ Transaction failed.";
-    Toastify({
-      text: "❌ Transaction failed!",
-      duration: 4000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "#f44336"
-    }).showToast();
-  }
-};
+    e.preventDefault(); // Prevent form from reloading page
+  
+    const to = document.getElementById("toAddress").value.trim();
+    const amount = document.getElementById("amount").value.trim();
+  
+    // Validate recipient address
+    if (!ethers.utils.isAddress(to)) {
+      Toastify({
+        text: "❌ Invalid recipient address!",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#f44336"
+      }).showToast();
+      return;
+    }
+  
+    // Validate amount input
+    if (!amount || isNaN(amount)) {
+      Toastify({
+        text: "❌ Amount must be a number",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#f44336"
+      }).showToast();
+      return;
+    }
+  
+    if (Number(amount) <= 0) {
+      Toastify({
+        text: "❌ Amount must be greater than 0",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#f44336"
+      }).showToast();
+      return;
+    }
+  
+    try {
+      const parsedAmount = ethers.utils.parseUnits(amount, 18);
+      const account = await signer.getAddress();
+      const balance = await contract.balanceOf(account);
+  
+      if (parsedAmount.gt(balance)) {
+        Toastify({
+          text: "❌ Insufficient token balance",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#f44336"
+        }).showToast();
+        return;
+      }
+  
+      document.getElementById("status").innerHTML = "<div class='spinner'></div>";
+      const tx = await contract.transfer(to, parsedAmount);
+  
+      document.getElementById("status").innerText = "⏳ Sending transaction...";
+      await tx.wait();
+  
+      document.getElementById("status").innerText = "✅ Transaction confirmed!";
+      Toastify({
+        text: "✅ Tokens sent successfully!",
+        duration: 4000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#4caf50"
+      }).showToast();
+  
+      // Refresh balance
+      const updatedBalance = await contract.balanceOf(account);
+      document.getElementById("balance").innerText = ethers.utils.formatUnits(updatedBalance, 18);
+  
+      // Save transaction
+      saveTx(to, amount);
+  
+    } catch (err) {
+      console.error(err);
+      document.getElementById("status").innerText = "❌ Transaction failed.";
+      Toastify({
+        text: "❌ Transaction failed!",
+        duration: 4000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#f44336"
+      }).showToast();
+    }
+  };
+  
 
 // Save & Render Transaction History
 function saveTx(address, amount) {

@@ -1,45 +1,176 @@
 const contractAddress = "0x3645884591E4aa1BBEfF10C247883E99B0691F57";
 const abi = [
-  // Minimal ABI for transfer and balanceOf
   "function balanceOf(address) view returns (uint256)",
   "function transfer(address to, uint amount) returns (bool)"
 ];
 
 let provider, signer, contract;
 
+// Connect Wallet
 document.getElementById("connectBtn").onclick = async () => {
-  if (window.ethereum) {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    contract = new ethers.Contract(contractAddress, abi, signer);
+    if (window.ethereum) {
+      try {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        contract = new ethers.Contract(contractAddress, abi, signer);
+  
+        const account = await signer.getAddress();
+        const connectBtn = document.getElementById("connectBtn");
+  
+        // Truncate and clear the button content
+        const truncated = `${account.substring(0, 6)}...${account.slice(-4)}`;
+        connectBtn.innerHTML = ""; // Clear previous content
+  
+        // Create span for address and icon
+        const addressSpan = document.createElement("span");
+        addressSpan.innerText = truncated;
+  
+        const copyIcon = document.createElement("span");
+        copyIcon.innerText = "📋";
+        copyIcon.title = "Copy Address";
+        copyIcon.id = "copyIcon";
+        copyIcon.style.marginLeft = "10px";
+        copyIcon.style.cursor = "pointer";
+  
+        // Append elements to button
+        connectBtn.appendChild(addressSpan);
+        connectBtn.appendChild(copyIcon);
+  
+        // Store full address in data attribute
+        connectBtn.setAttribute("data-address", account);
+  
+        // Show full address below
+        document.getElementById("account").innerText = account;
+  
+        const balance = await contract.balanceOf(account);
+        document.getElementById("balance").innerText = ethers.utils.formatUnits(balance, 18);
+  
+        Toastify({
+          text: "🔗 Wallet connected!",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#2196f3"
+        }).showToast();
+  
+        // Attach copy listener (prevent duplicate listeners)
+        copyIcon.addEventListener("click", (e) => {
+          e.stopPropagation(); // Don't trigger wallet connect
+          const address = connectBtn.getAttribute("data-address");
+          navigator.clipboard.writeText(address).then(() => {
+            Toastify({
+              text: "Address copied to clipboard!",
+              duration: 4000,
+              gravity: "top",
+              position: "right",
+              backgroundColor: "#2196f3"
+            }).showToast();
+          });
+        });
+  
+      } catch (error) {
+        console.error("Wallet connection failed", error);
+      }
+    } else {
+      alert("MetaMask not detected");
+    }
+  };
+  
 
-    const account = await signer.getAddress();
-    document.getElementById("account").innerText = account;
+  
+// Transfer Tokens
+document.getElementById("transferBtn").onclick = async (e) => {
+  e.preventDefault(); // Prevent form from reloading page
 
-    const balance = await contract.balanceOf(account);
-    document.getElementById("balance").innerText = ethers.utils.formatUnits(balance, 18);
-  } else {
-    alert("MetaMask not detected");
+  const to = document.getElementById("toAddress").value.trim();
+  const amount = document.getElementById("amount").value.trim();
+
+  // Validate inputs
+  if (!ethers.utils.isAddress(to)) {
+    Toastify({
+      text: "❌ Invalid address",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#f44336"
+    }).showToast();
+    return;
   }
-};
 
-document.getElementById("transferBtn").onclick = async () => {
-  const to = document.getElementById("toAddress").value;
-  const amount = document.getElementById("amount").value;
+  if (!amount || isNaN(amount) || Number(amount) <= 0) {
+    Toastify({
+      text: "❌ Invalid amount",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#f44336"
+    }).showToast();
+    return;
+  }
 
   try {
+    document.getElementById("status").innerHTML = "<div class='spinner'></div>";
+
     const tx = await contract.transfer(to, ethers.utils.parseUnits(amount, 18));
-    document.getElementById("status").innerText = "Sending Transaction...";
+    document.getElementById("status").innerText = "⏳ Sending transaction...";
     await tx.wait();
+
     document.getElementById("status").innerText = "✅ Transaction confirmed!";
-    // ✅ Refresh balance
+    Toastify({
+      text: "✅ Tokens sent successfully!",
+      duration: 4000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#4caf50"
+    }).showToast();
+
+    // Refresh balance
     const account = await signer.getAddress();
     const balance = await contract.balanceOf(account);
     document.getElementById("balance").innerText = ethers.utils.formatUnits(balance, 18);
+
+    // Save transaction
+    saveTx(to, amount);
 
   } catch (err) {
     console.error(err);
     document.getElementById("status").innerText = "❌ Transaction failed.";
+    Toastify({
+      text: "❌ Transaction failed!",
+      duration: 4000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#f44336"
+    }).showToast();
   }
 };
+
+// Save & Render Transaction History
+function saveTx(address, amount) {
+  const history = JSON.parse(localStorage.getItem("txHistory")) || [];
+  history.unshift({ address, amount, time: new Date().toISOString() });
+  localStorage.setItem("txHistory", JSON.stringify(history));
+  renderTxHistory();
+}
+
+function renderTxHistory() {
+  const history = JSON.parse(localStorage.getItem("txHistory")) || [];
+  const list = document.getElementById("txHistory");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  history.forEach(tx => {
+    const item = document.createElement("li");
+    item.innerHTML = `
+      <strong>To:</strong> ${tx.address} <br>
+      <strong>Amount:</strong> ${tx.amount} MTK <br>
+      <small>${new Date(tx.time).toLocaleString()}</small>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// Load history on page load
+window.addEventListener("DOMContentLoaded", renderTxHistory);

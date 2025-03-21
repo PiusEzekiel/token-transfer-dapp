@@ -1,30 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Token Transfer DApp</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div class="container">
-    <h1>Token Transfer DApp</h1>
-    <button id="connectBtn" class="button">Connect Wallet</button>
-    <p><strong>Account:</strong> <span id="account">Not Connected</span></p>
-    <p><strong>Balance:</strong> <span id="balance">0.00</span> MTK</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Token Transfer DApp</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    
+    <header class="app-header" role="banner">
+      <h1 id="app-title">Token Transfer DApp</h1>
+    </header>
 
-    <h2>Transfer Tokens</h2>
-    <div class="input-group">
-      <input type="text" id="toAddress" placeholder="Recipient address" />
-      <input type="number" id="amount" placeholder="Amount" />
-    </div>
-    <button id="transferBtn" class="button">Transfer</button>
+    <main class="dashboard" role="main">
+      <section aria-labelledby="wallet-section" class="wallet-info">
+        <!-- <h2 id="wallet-section">Wallet Details</h2> -->
+        <button id="connectBtn" class="button" aria-label="Connect Wallet or Copy Address">
+            Connect Wallet
+            <span id="copyIcon" title="Copy Address" style="display: none; margin-left: 10px; cursor: pointer;">📋</span>
+          </button>
+          
+        <p><strong style="display: none;">Account:</strong> <span id="account" style="display: none;">Not Connected</span></p>
+        <p><strong>Balance:</strong> <span id="balance">0.00</span> MTK</p>
+      </section>
+      <hr class="divider" />
+      <section aria-labelledby="transfer-section" class="transfer-form">
+        <h2 id="transfer-section">Transfer Tokens</h2>
+        <form id="transferForm" aria-describedby="form-instructions">
+          <p id="form-instructions">
+            Fill out the recipient's address and token amount to transfer.
+          </p>
+          <label for="toAddress">Recipient Address</label>
+          <input
+            type="text"
+            id="toAddress"
+            name="toAddress"
+            required
+            placeholder="0x..."
+            aria-required="true"
+          />
 
-    <p id="status"></p>
-  </div>
+          <label for="amount">Amount</label>
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+            required
+            placeholder="0"
+            aria-required="true"
+          />
 
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script src="app.js"></script>
-</body>
+          <button type="submit" class="button" id="transferBtn">
+            Transfer
+          </button>
+        </form>
+        <div id="status" role="status" aria-live="polite"></div>
+      </section>
+      <hr class="divider" />
+
+      <section aria-labelledby="history-section" class="transaction-history">
+        <h2 id="history-section">Transaction History</h2>
+        <ul id="txHistory" class="history-list"></ul>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; 2025 Token Transfer DApp. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="app.js"></script>
+  </body>
 </html>
